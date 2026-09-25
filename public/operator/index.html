@@ -1,3 +1,129 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#173750"><meta name="description" content="오늘어때? 운영자 관리 메뉴 구성안"><title>운영자 관리 | 오늘어때?</title><link rel="stylesheet" href="/assets/site.css"><script defer src="/assets/site.js"></script></head><body class="portal-body">
-<a class="skip" href="#main">본문으로 바로가기</a><header class="site-header"><div class="wrap header-inner"><a class="brand" href="/" aria-label="오늘어때? 홈"><span class="brand-mark" aria-hidden="true">오늘</span><span>오늘어때<span class="brand-question">?</span></span></a><button class="menu-toggle" type="button" aria-controls="primary-nav" aria-expanded="false">메뉴 <span aria-hidden="true">☰</span></button><nav class="nav" id="primary-nav" aria-label="주 메뉴"><a href="/#service">서비스 소개</a><a href="/#how">이용 방법</a><a href="/institution/">기관 관리</a><a href="/operator/" aria-current="page">운영자 관리</a><a class="nav-contact" href="mailto:today60100@gmail.com?subject=%EC%98%A4%EB%8A%98%EC%96%B4%EB%95%8C%20%EC%9A%B4%EC%98%81%20%EB%AC%B8%EC%9D%98">문의하기 ↗</a></nav></div></header>
-<main id="main"><div class="portal-banner"><div class="wrap"><p class="section-kicker">SERVICE OPERATIONS</p><h1>운영자 관리</h1><p>서비스 운영자가 사용할 메뉴의 구성안입니다. 현재는 화면 구조만 제공하며, 계정 설정이나 사용자 데이터 변경 기능은 연결되지 않았습니다.</p></div></div><div class="wrap portal-shell" data-portal="operator"><aside class="portal-sidebar"><h2>서비스 운영 메뉴</h2><div class="portal-menu" role="tablist" aria-label="운영자 관리 메뉴"><button type="button" role="tab" aria-selected="true" aria-controls="portal-panel" data-tab="overview">운영 현황 <small>예정</small></button><button type="button" role="tab" aria-selected="false" aria-controls="portal-panel" data-tab="institutions">기관 계정 <small>예정</small></button><button type="button" role="tab" aria-selected="false" aria-controls="portal-panel" data-tab="permissions">접근 권한 <small>예정</small></button><button type="button" role="tab" aria-selected="false" aria-controls="portal-panel" data-tab="notices">공지 관리 <small>예정</small></button><button type="button" role="tab" aria-selected="false" aria-controls="portal-panel" data-tab="history">운영 기록 <small>예정</small></button></div></aside><section class="portal-content" id="portal-panel" role="tabpanel" tabindex="0" aria-live="polite"><span class="portal-status">구성안 · 실제 데이터 미연결</span><h2 data-panel-title>운영 현황</h2><p data-panel-description>기관 이용 현황과 서비스 운영 상태를 점검하는 메뉴입니다.</p><div class="portal-preview"><h3>이 메뉴에서 다룰 내용</h3><ul data-panel-items><li>기관별 서비스 이용 현황</li><li>안부 확인 및 도움 요청 처리 현황</li><li>알림 발송 상태</li></ul></div><div class="portal-empty">운영자 인증과 서버 권한 검증 전이므로 실제 서비스 데이터는 표시하지 않습니다.</div><div class="portal-actions"><a href="/">홈으로 돌아가기</a><a href="mailto:today60100@gmail.com?subject=%EC%98%A4%EB%8A%98%EC%96%B4%EB%95%8C%20%EC%9A%B4%EC%98%81%20%EB%AC%B8%EC%9D%98">운영 문의 ↗</a></div></section></div></main><footer class="site-footer"><div class="wrap footer-bottom">© 2026 코비테크 · <a href="mailto:today60100@gmail.com">today60100@gmail.com</a></div></footer></body></html>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>운영자 관리 | 오늘어때?</title>
+  <link rel="stylesheet" href="./operator.css" />
+</head>
+<body>
+  <main class="page-shell">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">SERVICE OPERATIONS</p>
+        <h1>운영자 관리</h1>
+        <p class="page-description">오늘어때? 서비스 운영자 전용 화면입니다.</p>
+      </div>
+      <a class="home-link" href="/" data-operator-home-exit="true">홈으로 돌아가기</a>
+    </header>
+
+    <section id="loginSection" class="panel auth-panel">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">ADMIN SIGN IN</span>
+          <h2>운영자 로그인</h2>
+        </div>
+        <span id="loginStateBadge" class="badge badge-muted">로그인 필요</span>
+      </div>
+
+      <p class="help-text">
+        관리자 권한이 등록된 전화번호로 인증해 주세요.
+        Firebase에서 휴대폰으로 보낸 인증번호를 입력하면 운영자 권한을 확인합니다.
+      </p>
+
+      <div class="form-grid">
+        <label class="field">
+          <span>전화번호</span>
+          <input id="phoneInput" type="tel" inputmode="tel" autocomplete="tel"
+                 placeholder="01012345678" maxlength="20" />
+        </label>
+        <button id="sendCodeButton" class="button button-primary" type="button">인증번호 받기</button>
+      </div>
+
+      <div id="recaptcha-container" class="recaptcha-box"></div>
+
+      <div id="verificationArea" class="verification-area" hidden>
+        <div class="form-grid">
+          <label class="field">
+            <span>인증번호</span>
+            <input id="codeInput" type="text" inputmode="numeric" autocomplete="one-time-code"
+                   placeholder="6자리 인증번호" maxlength="6" />
+          </label>
+          <button id="verifyCodeButton" class="button button-primary" type="button">로그인</button>
+        </div>
+        <button id="resendCodeButton" class="button button-link" type="button">인증번호 다시 받기</button>
+      </div>
+
+      <p id="authMessage" class="message" aria-live="polite"></p>
+    </section>
+
+    <section id="checkingSection" class="panel" hidden>
+      <div class="loading-row">
+        <div class="spinner" aria-hidden="true"></div>
+        <div>
+          <h2>운영자 권한을 확인하고 있습니다.</h2>
+          <p class="help-text">Firebase 관리자 권한을 확인한 뒤 운영현황을 불러옵니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="dashboardSection" hidden>
+      <div class="dashboard-top">
+        <div>
+          <p class="eyebrow">SERVICE OPERATIONS</p>
+          <h2>운영 현황</h2>
+          <p id="signedInInfo" class="help-text"></p>
+        </div>
+        <div class="dashboard-actions">
+          <button id="refreshStatsButton" class="button button-secondary" type="button">현황 새로고침</button>
+          <button id="logoutButton" class="button button-outline" type="button">로그아웃</button>
+        </div>
+      </div>
+
+      <p id="dashboardMessage" class="message" aria-live="polite"></p>
+
+      <div class="stats-grid">
+        <article class="stat-card"><span class="stat-label">전체 이용자</span><strong id="statTotal" class="stat-value">-</strong></article>
+        <article class="stat-card"><span class="stat-label">대상자</span><strong id="statSenior" class="stat-value stat-senior">-</strong></article>
+        <article class="stat-card"><span class="stat-label">가족보호자</span><strong id="statGuardian" class="stat-value stat-guardian">-</strong></article>
+        <article class="stat-card"><span class="stat-label">돌봄담당자</span><strong id="statCareWorker" class="stat-value stat-care-worker">-</strong></article>
+        <article class="stat-card"><span class="stat-label">이용 정지</span><strong id="statSuspended" class="stat-value stat-suspended">-</strong></article>
+      </div>
+
+      <p class="stat-note">역할별 수치는 여러 역할을 사용한 계정의 경우 중복 집계될 수 있습니다.</p>
+
+      <section class="panel menu-panel">
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">ADMIN MENU</span>
+            <h2>서비스 운영 메뉴</h2>
+          </div>
+          <span class="badge badge-live">Firebase 연결됨</span>
+        </div>
+
+        <div class="menu-grid">
+          <button class="menu-card menu-card-live" type="button" data-section="overview"><span>운영 현황</span><small>실제 이용자 현황 조회</small></button>
+          <button class="menu-card menu-card-live" type="button" data-section="users"><span>이용자 관리</span><small>최근 이용자·전화번호 조회</small></button>
+          <button class="menu-card" type="button" data-planned="notices"><span>공지 관리</span><small>다음 단계에서 연결</small></button>
+          <button class="menu-card" type="button" data-planned="institutions"><span>기관 계정</span><small>준비 중</small></button>
+          <button class="menu-card" type="button" data-planned="permissions"><span>접근 권한</span><small>준비 중</small></button>
+          <button class="menu-card" type="button" data-planned="audit"><span>운영 기록</span><small>준비 중</small></button>
+        </div>
+      </section>
+    </section>
+
+    <footer class="footer">
+      <a href="/" data-operator-home-exit="true">홈으로 돌아가기</a><span>·</span>
+      <a href="mailto:today60100@gmail.com?subject=%EC%98%A4%EB%8A%98%EC%96%B4%EB%95%8C%20%EC%9A%B4%EC%98%81%20%EB%AC%B8%EC%9D%98">운영 문의 ↗</a>
+    </footer>
+  </main>
+
+  <script src="/__/firebase/8.10.1/firebase-app.js"></script>
+  <script src="/__/firebase/8.10.1/firebase-auth.js"></script>
+  <script src="/__/firebase/8.10.1/firebase-firestore.js"></script>
+  <script src="/__/firebase/init.js"></script>
+  <script src="./session-timeout.js?v=10"></script>
+  <script src="./operator.js?v=10"></script>
+</body>
+</html>

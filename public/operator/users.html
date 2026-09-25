@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>이용자 관리 | 오늘어때?</title>
+  <link rel="stylesheet" href="./operator.css" />
+  <link rel="stylesheet" href="./users.css?v=11" />
+</head>
+<body>
+  <main class="page-shell">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">SERVICE OPERATIONS</p>
+        <h1>이용자 관리</h1>
+        <p class="page-description">
+          최근 이용자를 확인하거나 전화번호로 이용자를 조회합니다.
+        </p>
+      </div>
+
+      <a class="home-link" href="/operator/">운영 현황으로 돌아가기</a>
+    </header>
+
+    <section id="checkingSection" class="panel">
+      <div class="loading-row">
+        <div class="spinner" aria-hidden="true"></div>
+        <div>
+          <h2>운영자 권한을 확인하고 있습니다.</h2>
+          <p class="help-text">관리자 인증 후 이용자 목록을 불러옵니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="usersSection" hidden>
+      <div class="users-topbar">
+        <div>
+          <span class="badge badge-live">관리자 인증</span>
+          <p id="signedInInfo" class="help-text signed-in-info"></p>
+        </div>
+
+        <div class="dashboard-actions">
+          <button id="refreshButton" class="button button-secondary" type="button">
+            최근 이용자 다시 보기
+          </button>
+          <button id="logoutButton" class="button button-outline" type="button">
+            로그아웃
+          </button>
+        </div>
+      </div>
+
+      <section class="panel search-panel">
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">USER SEARCH</span>
+            <h2>전화번호 조회</h2>
+          </div>
+        </div>
+
+        <p class="help-text">
+          이용자의 전화번호는 목록에 표시하지 않습니다.
+          전화번호 조회는 관리자 전용 서버 기능을 통해 처리합니다.
+        </p>
+
+        <div class="form-grid user-search-grid">
+          <label class="field">
+            <span>전화번호</span>
+            <input
+              id="phoneSearchInput"
+              type="tel"
+              inputmode="tel"
+              autocomplete="off"
+              placeholder="01012345678"
+              maxlength="20"
+            />
+          </label>
+
+          <button id="searchButton" class="button button-primary" type="button">
+            조회
+          </button>
+        </div>
+
+        <p id="pageMessage" class="message" aria-live="polite"></p>
+      </section>
+
+      <section class="panel list-panel">
+        <div class="section-heading list-heading">
+          <div>
+            <span class="section-kicker">USERS</span>
+            <h2 id="listTitle">최근 이용자</h2>
+          </div>
+          <span id="listCountBadge" class="badge badge-muted">0명</span>
+        </div>
+
+        <div class="table-wrap">
+          <table class="user-table">
+            <thead>
+              <tr>
+                <th>회원번호</th>
+                <th>회원 ID</th>
+                <th>역할</th>
+                <th>상태</th>
+                <th>가입일</th>
+                <th>전화번호</th>
+                <th id="actionHeader">상태 관리</th>
+              </tr>
+            </thead>
+            <tbody id="userTableBody"></tbody>
+          </table>
+        </div>
+
+        <div id="userCardList" class="user-card-list"></div>
+
+        <div id="emptyState" class="empty-state" hidden>
+          조회된 이용자가 없습니다.
+        </div>
+      </section>
+
+      <section id="activitySection" class="activity-section" hidden>
+        <div class="activity-heading">
+          <div>
+            <span class="section-kicker">CURRENT ACTIVITY</span>
+            <h2>현재 확인 가능한 활동정보</h2>
+            <p class="help-text">
+              조회 권한에 따라 안부 및 활동기록을 표시합니다.
+              완료 후 삭제되는 과거 도움요청 처리 이력은 아직 포함되지 않습니다.
+            </p>
+          </div>
+          <button id="refreshActivityButton" class="button button-secondary" type="button">
+            활동정보 새로고침
+          </button>
+        </div>
+
+        <div class="activity-grid">
+          <article class="activity-card">
+            <h3>안부기록</h3>
+            <div id="activityCheckIn" class="activity-body">
+              불러오는 중…
+            </div>
+          </article>
+
+          <article class="activity-card">
+            <h3>현재 미완료 안부</h3>
+            <div id="activityPending" class="activity-body">
+              불러오는 중…
+            </div>
+          </article>
+
+          <article class="activity-card">
+            <h3>재요청 기록</h3>
+            <div id="activityReRequest" class="activity-body">
+              불러오는 중…
+            </div>
+          </article>
+
+          <article class="activity-card">
+            <h3>도움요청</h3>
+            <div id="activityHelp" class="activity-body">
+              불러오는 중…
+            </div>
+          </article>
+
+          <article class="activity-card">
+            <h3>연결상태</h3>
+            <div id="activityConnections" class="activity-body">
+              불러오는 중…
+            </div>
+          </article>
+        </div>
+
+        <p id="activityMessage" class="message" aria-live="polite"></p>
+      </section>
+    </section>
+
+    <footer class="footer">
+      <a href="/operator/">운영 현황으로 돌아가기</a>
+      <span>·</span>
+      <a href="/" data-operator-home-exit="true">홈으로 돌아가기</a>
+    </footer>
+  </main>
+
+  <script src="/__/firebase/8.10.1/firebase-app.js"></script>
+  <script src="/__/firebase/8.10.1/firebase-auth.js"></script>
+  <script src="/__/firebase/8.10.1/firebase-firestore.js"></script>
+  <script src="/__/firebase/8.10.1/firebase-functions.js"></script>
+  <script src="/__/firebase/init.js"></script>
+
+  <script src="./session-timeout.js?v=10"></script>
+  <script src="./users.js?v=11"></script>
+</body>
+</html>
