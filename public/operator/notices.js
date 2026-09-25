@@ -2,6 +2,7 @@
   "use strict";
 
   const MAX_NOTICES = 200;
+  const REGION = "asia-northeast3";
 
   const checkingSection = document.getElementById("checkingSection");
   const noticesSection = document.getElementById("noticesSection");
@@ -29,6 +30,7 @@
 
   let auth;
   let db;
+  let functions;
   let currentEditId = "";
 
   function setMessage(element, text, type = "") {
@@ -174,6 +176,23 @@
     }
   }
 
+
+  async function recordNoticeAudit(action, noticeId) {
+    if (!functions || !noticeId) return false;
+
+    try {
+      const callable = functions.httpsCallable("adminRecordNoticeAudit");
+      await callable({
+        action: String(action || ""),
+        noticeId: String(noticeId || "")
+      });
+      return true;
+    } catch (error) {
+      console.error("공지사항 운영기록 저장 실패", error);
+      return false;
+    }
+  }
+
   async function loadNotices() {
     refreshButton.disabled = true;
     newNoticeButton.disabled = true;
@@ -273,15 +292,23 @@
     };
 
     try {
+      const wasEditing = Boolean(currentEditId);
+      let savedNoticeId = currentEditId;
+
       if (currentEditId) {
         await db.collection("notices").doc(currentEditId).set(values, { merge: true });
       } else {
         values.createdAt = firebase.firestore.FieldValue.serverTimestamp();
         values.createdBy = user.uid;
-        await db.collection("notices").add(values);
+        const createdReference = await db.collection("notices").add(values);
+        savedNoticeId = createdReference.id;
       }
 
-      const wasEditing = Boolean(currentEditId);
+      const auditSaved = await recordNoticeAudit(
+        wasEditing ? "NOTICE_UPDATED" : "NOTICE_CREATED",
+        savedNoticeId
+      );
+
       currentEditId = "";
       editorModal.hidden = true;
       noticeForm.reset();
@@ -289,8 +316,12 @@
 
       setMessage(
         pageMessage,
-        wasEditing ? "공지사항을 수정했습니다." : "새 공지사항을 등록했습니다.",
-        "success"
+        auditSaved
+          ? (wasEditing ? "공지사항을 수정했습니다." : "새 공지사항을 등록했습니다.")
+          : (wasEditing
+              ? "공지사항은 수정됐지만 운영기록 저장에 실패했습니다."
+              : "공지는 등록됐지만 운영기록 저장에 실패했습니다."),
+        auditSaved ? "success" : "warning"
       );
       await loadNotices();
     } catch (error) {
@@ -327,10 +358,19 @@
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       });
 
+      const auditSaved = await recordNoticeAudit(
+        makeActive ? "NOTICE_SHOWN" : "NOTICE_HIDDEN",
+        item.id
+      );
+
       setMessage(
         pageMessage,
-        makeActive ? "공지사항을 다시 공개했습니다." : "공지사항을 숨겼습니다.",
-        "success"
+        auditSaved
+          ? (makeActive ? "공지사항을 다시 공개했습니다." : "공지사항을 숨겼습니다.")
+          : (makeActive
+              ? "공지는 다시 공개됐지만 운영기록 저장에 실패했습니다."
+              : "공지는 숨김 처리됐지만 운영기록 저장에 실패했습니다."),
+        auditSaved ? "success" : "warning"
       );
       await loadNotices();
     } catch (error) {
@@ -432,6 +472,7 @@
 
     auth = firebase.auth();
     db = firebase.firestore();
+    functions = firebase.app().functions(REGION);
 
     refreshButton.addEventListener("click", loadNotices);
     newNoticeButton.addEventListener("click", () => openEditor(null));

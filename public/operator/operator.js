@@ -340,6 +340,17 @@
         );
       }
       window.location.href = "/operator/notices.html";
+    });
+    document.querySelector('[data-section="audit"]')?.addEventListener("click", () => {
+      if (
+        window.AdminSessionTimeout &&
+        window.AdminSessionTimeout.issueInternalNavigationTicket
+      ) {
+        window.AdminSessionTimeout.issueInternalNavigationTicket(
+          "/operator/audit.html"
+        );
+      }
+      window.location.href = "/operator/audit.html";
     });  }
 
   async function initialize() {

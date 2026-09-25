@@ -1,0 +1,141 @@
+.audit-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.signed-in-info {
+  margin-top: 8px;
+}
+
+.audit-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.audit-list-panel {
+  padding-bottom: 18px;
+}
+
+.audit-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.audit-table {
+  width: 100%;
+  min-width: 820px;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.audit-table th,
+.audit-table td {
+  padding: 13px 14px;
+  border-bottom: 1px solid #eee5de;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.audit-table th {
+  background: #faf6f2;
+  color: #665950;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.audit-table td {
+  color: #3c3530;
+  font-size: 14px;
+}
+
+.audit-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.audit-kind {
+  font-weight: 800;
+}
+
+.audit-action {
+  font-weight: 800;
+  color: var(--brand);
+}
+
+.audit-target {
+  max-width: 320px;
+  overflow-wrap: anywhere;
+}
+
+.audit-card-list {
+  display: none;
+}
+
+.audit-card {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.audit-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.audit-card-title {
+  margin: 0;
+  font-size: 16px;
+}
+
+.audit-card-time {
+  flex: 0 0 auto;
+  color: #8e8178;
+  font-size: 12px;
+}
+
+.audit-card-lines {
+  margin-top: 10px;
+}
+
+.audit-card-lines p {
+  margin: 3px 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.audit-empty {
+  padding: 44px 20px;
+  color: #92867e;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .audit-topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .audit-topbar .dashboard-actions {
+    width: 100%;
+  }
+
+  .audit-topbar .button {
+    flex: 1;
+  }
+
+  .audit-table-wrap {
+    display: none;
+  }
+
+  .audit-card-list {
+    display: grid;
+    gap: 10px;
+  }
+}
