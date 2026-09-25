@@ -329,7 +329,18 @@
       }
       window.location.href = "/operator/users.html";
     });
-  }
+
+    document.querySelector('[data-section="notices"]')?.addEventListener("click", () => {
+      if (
+        window.AdminSessionTimeout &&
+        window.AdminSessionTimeout.issueInternalNavigationTicket
+      ) {
+        window.AdminSessionTimeout.issueInternalNavigationTicket(
+          "/operator/notices.html"
+        );
+      }
+      window.location.href = "/operator/notices.html";
+    });  }
 
   async function initialize() {
     if (!window.firebase || !firebase.apps || firebase.apps.length === 0) {
