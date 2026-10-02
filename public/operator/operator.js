@@ -309,6 +309,10 @@
   }
 
   function setupPlannedMenuButtons() {
+    document.querySelector('[data-section="institutions"]')?.addEventListener("click", () => {
+      window.AdminSessionTimeout?.issueInternalNavigationTicket("/operator/institutions.html");
+      window.location.href = "/operator/institutions.html";
+    });
     document.querySelectorAll("[data-planned]").forEach(button => {
       button.addEventListener("click", () => {
         const label = button.querySelector("span")?.textContent || "이 메뉴";

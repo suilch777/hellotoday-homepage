@@ -1,3 +1,138 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#173750"><meta name="description" content="오늘어때? 기관 관리 메뉴 구성안"><title>기관 관리 | 오늘어때?</title><link rel="stylesheet" href="/assets/site.css"><script defer src="/assets/site.js"></script></head><body class="portal-body">
-<a class="skip" href="#main">본문으로 바로가기</a><header class="site-header"><div class="wrap header-inner"><a class="brand" href="/" aria-label="오늘어때? 홈"><span class="brand-mark" aria-hidden="true">오늘</span><span>오늘어때<span class="brand-question">?</span></span></a><button class="menu-toggle" type="button" aria-controls="primary-nav" aria-expanded="false">메뉴 <span aria-hidden="true">☰</span></button><nav class="nav" id="primary-nav" aria-label="주 메뉴"><a href="/#service">서비스 소개</a><a href="/#how">이용 방법</a><a href="/institution/" aria-current="page">기관 관리</a><a href="/operator/">운영자 관리</a><a class="nav-contact" href="mailto:today60100@gmail.com?subject=%EC%98%A4%EB%8A%98%EC%96%B4%EB%95%8C%20%EA%B8%B0%EA%B4%80%20%EB%AC%B8%EC%9D%98">문의하기 ↗</a></nav></div></header>
-<main id="main"><div class="portal-banner"><div class="wrap"><p class="section-kicker">INSTITUTION MANAGEMENT</p><h1>기관 관리</h1><p>기관 담당자가 살펴볼 업무 메뉴의 구성안입니다. 현재는 화면 구조만 제공하며, 대상자 정보와 알림 기록은 표시하지 않습니다.</p></div></div><div class="wrap portal-shell" data-portal="institution"><aside class="portal-sidebar"><h2>기관 업무 메뉴</h2><div class="portal-menu" role="tablist" aria-label="기관 관리 메뉴"><button type="button" role="tab" aria-selected="true" aria-controls="portal-panel" data-tab="overview">대상자 현황 <small>예정</small></button><button type="button" role="tab" aria-selected="false" aria-controls="portal-panel" data-tab="checkins">안부 지연 확인 <small>예정</small></button><button type="button" role="tab" aria-selected="false" aria-controls="portal-panel" data-tab="help">도움 요청 <small>예정</small></button><button type="button" role="tab" aria-selected="false" aria-controls="portal-panel" data-tab="staff">담당자 배정 <small>예정</small></button><button type="button" role="tab" aria-selected="false" aria-controls="portal-panel" data-tab="settings">기관 설정 <small>예정</small></button></div></aside><section class="portal-content" id="portal-panel" role="tabpanel" tabindex="0" aria-live="polite"><span class="portal-status">구성안 · 실제 데이터 미연결</span><h2 data-panel-title>대상자 현황</h2><p data-panel-description>기관에 연결된 대상자의 안부 확인 상태를 한곳에서 살펴보는 메뉴입니다.</p><div class="portal-preview"><h3>이 메뉴에서 다룰 내용</h3><ul data-panel-items><li>대상자별 오늘의 안부 확인 여부</li><li>최근 확인 시각과 확인 방법</li><li>담당자별 조회 범위</li></ul></div><div class="portal-empty">기관 계정 인증과 접근 권한 연결 전이므로 개인 정보와 실시간 현황은 표시하지 않습니다.</div><div class="portal-actions"><a href="/">홈으로 돌아가기</a><a href="mailto:today60100@gmail.com?subject=%EC%98%A4%EB%8A%98%EC%96%B4%EB%95%8C%20%EA%B8%B0%EA%B4%80%20%EC%8B%9C%EB%B2%94%EC%9A%B4%EC%98%81%20%EB%AC%B8%EC%9D%98">시범 운영 문의 ↗</a></div></section></div></main><footer class="site-footer"><div class="wrap footer-bottom">© 2026 코비테크 · <a href="mailto:today60100@gmail.com">today60100@gmail.com</a></div></footer></body></html>
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173750"><meta name="robots" content="noindex, nofollow">
+  <title>기관 가입·로그인 | 오늘어때?</title>
+  <link rel="stylesheet" href="/assets/site.css?v=4"><link rel="stylesheet" href="./institution.css?v=12">
+  <script defer src="/assets/site.js"></script>
+  <link rel="icon" type="image/png" href="/assets/hellotoday-logo.png">
+</head>
+<body class="portal-body">
+<a class="skip" href="#main">본문으로 바로가기</a>
+<header class="site-header"><div class="wrap header-inner">
+  <a class="brand" href="/"><img class="brand-logo" src="/assets/hellotoday-logo.png" width="48" height="48" alt="" aria-hidden="true"><span>오늘어때<span class="brand-question">?</span></span></a>
+  <a class="institution-home-link" href="/">홈으로 돌아가기 <span aria-hidden="true">→</span></a>
+</div></header>
+<main id="main">
+  <div class="portal-banner"><div class="wrap"><p class="section-kicker">INSTITUTION MANAGEMENT</p><h1>기관 관리</h1><p id="signupIntroduction">기관 계정으로 가입을 신청해 주세요. 운영자 승인 후 기관 업무 메뉴를 이용할 수 있습니다.</p></div></div>
+  <div id="institutionCodePanel" class="wrap" hidden><p>기관코드 <strong id="institutionCodeValue"></strong> <button id="copyInstitutionCode" type="button">코드 복사</button></p><p id="institutionCodeMessage" role="status"></p></div>
+  <div class="account-wrap">
+    <section id="checkingView" class="account-card" aria-live="polite"><h2>계정 상태를 확인하고 있습니다.</h2><p>잠시만 기다려 주세요.</p></section>
+    <section id="loginView" class="account-card" hidden>
+      <div class="account-tabs" aria-label="로그인 또는 가입"><button id="loginTab" type="button" aria-pressed="true">기관 로그인</button><button id="signupTab" type="button" aria-pressed="false">기관 가입</button></div>
+      <p class="account-note">기관 이메일 가입 → 이메일 확인 → 담당자 휴대전화 인증 → 기관 정보 제출 → 운영자 승인</p>
+      <p class="account-note">로그인할 때는 기관 이메일·비밀번호와 담당자 개인 휴대전화의 문자 인증이 필요합니다.</p>
+      <p class="account-note"><a href="/policies/terms.html" target="_blank" rel="noopener noreferrer">홈페이지 이용약관</a> · <a href="/policies/privacy.html" target="_blank" rel="noopener noreferrer">홈페이지 개인정보처리방침</a></p>
+      <form id="authForm" class="account-form">
+        <label class="account-field">기관 이메일 (아이디)<input id="email" type="email" autocomplete="username" maxlength="254" required></label>
+        <label class="account-field">비밀번호<input id="password" type="password" autocomplete="current-password" maxlength="128" required></label>
+        <label id="passwordConfirmField" class="account-field" hidden>비밀번호 확인 (8자 이상)<input id="passwordConfirm" type="password" autocomplete="new-password" minlength="8" maxlength="128"></label>
+        <button id="authSubmit" class="primary" type="submit">다음: 담당자 휴대전화 인증</button>
+      </form>
+      <div class="account-actions" id="accountRecoveryActions"><button id="findEmail" type="button" aria-controls="emailHelp" aria-expanded="false">이메일을 잊으셨나요?</button><button id="resetPassword" type="button" aria-controls="passwordHelp" aria-expanded="false">비밀번호를 잊으셨나요?</button></div>
+      <section id="emailHelp" class="recovery-help" hidden aria-labelledby="emailHelpTitle"><h3 id="emailHelpTitle">기관 이메일 찾기</h3><p>기관 가입 때 받은 ‘오늘어때’ 인증 메일을 평소 사용하는 메일함에서 먼저 찾아보세요.</p><p>찾기 어렵다면 운영자에게 <strong>기관명, 담당자명, 기관코드(알고 있는 경우)</strong>를 알려 주세요. 운영자가 등록된 담당자 연락처로 본인 확인 후 가입 이메일을 안내합니다.</p><p><a href="mailto:today60100@gmail.com?subject=%EA%B8%B0%EA%B4%80%20%EC%9D%B4%EB%A9%94%EC%9D%BC%20%ED%99%95%EC%9D%B8%20%EC%9A%94%EC%B2%AD">운영자에게 이메일로 문의하기</a> · today60100@gmail.com</p><p class="account-note">비밀번호나 문자 인증번호는 보내지 마세요.</p><button type="button" data-close-recovery>닫기</button></section>
+      <section id="passwordHelp" class="recovery-help" hidden aria-labelledby="passwordHelpTitle"><h3 id="passwordHelpTitle">비밀번호 재설정</h3><p>가입한 기관 이메일을 입력하면 새 비밀번호를 설정할 수 있는 링크를 보내드립니다.</p><form id="passwordResetForm" class="account-form"><label class="account-field">가입한 기관 이메일<input id="resetEmail" type="email" autocomplete="email" maxlength="254" required></label><button class="primary" type="submit">재설정 메일 보내기</button></form><p class="account-note">기존 비밀번호는 조회할 수 없습니다. 메일함에 접근할 수 없으면 운영자에게 문의해 주세요.</p><button type="button" data-close-recovery>닫기</button></section>
+    </section>
+    <section id="verifyView" class="account-card" hidden>
+      <span class="account-badge">이메일 인증</span><h2>이메일 주소를 확인해 주세요.</h2>
+      <p><strong id="verifyEmail"></strong> 메일함에서 인증 링크를 눌러 주세요. 메일이 보이지 않으면 스팸함도 확인해 주세요.</p>
+      <div class="account-actions"><button class="primary" type="button" data-refresh-account>인증 완료 확인</button><button id="resendVerification" type="button">인증 메일 다시 받기</button><button type="button" data-institution-logout>로그아웃</button></div>
+    </section>
+    <section id="smsView" class="account-card" hidden>
+      <span class="account-badge">담당자 문자 인증</span><h2 id="smsTitle">담당자 개인 휴대전화 인증</h2>
+      <p id="smsDescription">가입 시에는 담당자 본인의 휴대전화를 인증해 주세요. 가입 후에는 등록된 담당자 번호로 인증해야 합니다. 인증 완료 후 30분 동안 이용할 수 있습니다.</p>
+      <label id="smsPhoneField" class="account-field">담당자 개인 휴대전화<input id="smsPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="01012345678" maxlength="20"></label>
+      <label id="smsConsentField" class="sms-consent"><input id="smsConsent" type="checkbox"><span>휴대전화 번호가 인증 및 스팸·악용 방지를 위해 Google에 전달·저장되는 것에 동의합니다.</span></label>
+      <div id="smsRecaptcha" class="sms-recaptcha"></div>
+      <div class="account-actions"><button id="sendSms" class="primary" type="button">인증번호 받기</button></div>
+      <div id="smsCodeArea" hidden>
+        <p id="smsDestination" class="account-note"></p>
+        <form id="smsForm" class="account-form">
+          <label class="account-field">문자 인증번호<input id="smsCode" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" minlength="6" required></label>
+          <button class="primary" type="submit">인증 완료</button>
+        </form>
+      </div>
+      <div class="account-actions"><button id="cancelSms" type="button">취소하고 로그인으로</button></div>
+      <p class="account-note sms-help">휴대전화를 분실했거나 번호가 변경되었다면 운영자에게 새 번호와 변경 사유를 알려 주세요. 운영자가 변경을 허용한 뒤 24시간 내 새 번호로 인증하고 재승인을 받아야 합니다.</p>
+    </section>
+    <section id="policyView" class="account-card" hidden aria-labelledby="policyTitle">
+      <h2 id="policyTitle">기관 가입 안내를 확인해 주세요</h2>
+      <p>기관 가입 전에 홈페이지 이용약관과 개인정보처리방침을 확인해 주세요. 동의·확인 기록은 인증 완료 후 저장합니다. 기존 기관은 로그인할 때 다시 동의하지 않습니다.</p>
+      <form id="policyForm" class="account-form">
+        <label class="sms-consent"><input id="termsAccepted" type="checkbox" required><span><a href="/policies/terms.html" data-policy-document>홈페이지 이용약관</a>에 동의합니다. (필수)</span></label>
+        <label class="sms-consent"><input id="privacyAcknowledged" type="checkbox" required><span><a href="/policies/privacy.html" data-policy-document>홈페이지 개인정보처리방침</a>을 확인했습니다. (필수)</span></label>
+        <p id="policyVersion" class="account-note"></p>
+        <p class="account-note">동의하지 않으면 기관관리 기능을 이용할 수 없습니다. 공개 홈페이지 안내는 이용할 수 있습니다. 이 절차는 대상자의 기관 정보 제공 동의를 대신하지 않습니다.</p>
+        <button class="primary" type="submit">동의·확인하고 계속</button>
+        <button type="button" data-institution-logout>취소하고 나가기</button>
+      </form>
+    </section>
+    <section id="applicationView" class="account-card" hidden>
+      <span class="account-badge">가입 신청</span><h2>기관 정보를 입력해 주세요.</h2>
+      <p class="account-note">기관 이메일: <span id="applicationEmail"></span><br>인증한 담당자 휴대전화: <strong id="applicationMobile"></strong><br>입력한 정보는 운영자의 기관 가입 심사와 연락에 사용됩니다.</p>
+      <p class="account-note">가입 신청을 완료하면 기관코드가 자동 발급됩니다.</p><form id="applicationForm" class="account-form">
+        <label class="account-field">기관명<input id="institutionName" autocomplete="organization" maxlength="100" required></label>
+        <label class="account-field">담당자명<input id="managerName" autocomplete="name" maxlength="60" required></label>
+        <label class="account-field">기관 연락처<input id="phone" type="tel" autocomplete="tel" maxlength="20" minlength="8" required></label>
+        <label class="account-field">기관 주소 (선택)<input id="address" autocomplete="street-address" maxlength="200"></label>
+        <button class="primary" type="submit">가입 승인 신청</button>
+      </form>
+      <div class="account-actions"><button type="button" data-institution-logout>로그아웃</button></div>
+    </section>
+    <section id="statusView" class="account-card" hidden>
+      <span class="account-badge" id="statusName"></span><h2 id="statusTitle"></h2><p id="statusDescription"></p>
+      <div class="account-actions"><button class="primary" type="button" data-refresh-account>승인 상태 다시 확인</button><button id="reapplyButton" type="button" hidden>정보 수정 후 재신청</button><button type="button" data-institution-logout>로그아웃</button></div>
+    </section>
+    <p id="accountMessage" class="account-message" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1"></p>
+  </div>
+  <section id="portalView" hidden>
+    <div class="wrap institution-top"><p><strong id="institutionIdentity"></strong> · 승인된 기관 계정</p><button type="button" data-institution-logout>로그아웃</button></div>
+    <div class="wrap portal-shell">
+      <aside class="portal-sidebar"><h2>기관 업무 메뉴</h2><div class="portal-menu" role="tablist" aria-label="기관 업무">
+        <button type="button" role="tab" aria-selected="true" aria-controls="institutionPanel" data-institution-menu="overview">대상자 현황</button>
+        <button type="button" role="tab" aria-selected="false" aria-controls="institutionPanel" data-institution-menu="checkins">안부 지연 확인</button>
+        <button type="button" role="tab" aria-selected="false" aria-controls="institutionPanel" data-institution-menu="help">도움 요청</button>
+        <button type="button" role="tab" aria-selected="false" aria-controls="institutionPanel" data-institution-menu="staff">돌봄담당자 관리</button>
+        <button type="button" role="tab" aria-selected="false" aria-controls="institutionPanel" data-institution-menu="settings">기관 설정</button>
+      </div></aside>
+      <section class="portal-content" id="institutionPanel" role="tabpanel" aria-labelledby="portalTitle" aria-live="polite"><div class="portal-title-row"><h2 id="portalTitle">대상자 현황</h2><button id="seniorRefresh" type="button" hidden>새로고침</button><button id="workerRefresh" type="button" hidden>새로고침</button></div><p id="portalEmpty" class="portal-empty"></p><p id="phoneChangeHelp" class="account-note" hidden>담당자 휴대전화 변경은 운영자에게 요청해 주세요. 운영자가 지정한 새 번호로 문자 인증 후 재승인을 받으면 변경이 완료됩니다. 변경 처리 중에는 기관 메뉴 이용이 중단됩니다.</p><section id="seniorPanel" hidden aria-label="업무 대상자 현황">
+  <!-- 기관 조회 범위: 승인된 담당자의 CARE_WORKER 업무 연결만 포함하며 FAMILY 연결은 제외한다. -->
+  <button id="seniorBack" type="button" hidden>담당자 관리로 돌아가기</button>
+  <div id="seniorSummary" class="senior-summary" role="group" aria-label="대상자 상태별 보기">
+    <button type="button" data-filter="ALL" aria-pressed="true">전체대상자 <strong>—</strong></button>
+    <button type="button" data-filter="COMPLETED" aria-pressed="false">완료 <strong>—</strong></button>
+    <button type="button" data-filter="INCOMPLETE" aria-pressed="false">미완료 <strong>—</strong></button>
+    <button type="button" data-filter="HELP_REQUEST" aria-pressed="false">도움요청 <strong>—</strong></button>
+  </div>
+  <p class="account-note">완료는 앱과 같은 최근 실제 안부 기록 기준입니다. 진행 중 도움요청을 우선 표시하며, 안부 지연 알림은 ‘안부 지연 확인’에서 따로 확인합니다. 배터리는 최근 안부 시점의 값입니다.</p>
+  <p id="helpLiveMessage" class="account-note" role="status"></p><h3 id="seniorListTitle">전체 대상자</h3><p id="seniorMessage" role="status"></p><div id="seniorList" class="senior-list"></div>
+</section><section id="careWorkerPanel" hidden aria-label="돌봄담당자 관리">
+        <p>돌봄담당자가 앱에서 기관코드를 입력해 요청하면 이곳에서 소속을 승인하거나 반려할 수 있습니다.</p>
+        <div class="worker-toolbar"><div id="workerStatusTabs" class="status-tabs" role="tablist" aria-label="돌봄담당자 소속 상태"><button type="button" role="tab" data-status="PENDING" aria-selected="true">승인 대기 <strong>0</strong></button><button type="button" role="tab" data-status="APPROVED" aria-selected="false">승인 완료 <strong>0</strong></button><button type="button" role="tab" data-status="REJECTED" aria-selected="false">반려 <strong>0</strong></button><button type="button" role="tab" data-status="SUSPENDED" aria-selected="false">소속 정지 <strong>0</strong></button></div><input id="workerStatus" type="hidden" value="PENDING"></div>
+        <p id="workerMessage" role="status"></p><div id="workerList"></div><button id="workerMore" type="button" hidden>더 보기</button>
+        </section><dl id="institutionDetails" class="institution-details" hidden></dl></section>
+    </div>
+  </section>
+</main>
+<dialog id="policyDocumentDialog" class="policy-document-dialog" aria-labelledby="policyDocumentTitle">
+  <div class="policy-document-header"><h2 id="policyDocumentTitle">정책 문서</h2><button id="policyDocumentClose" type="button">읽기 완료 · 돌아가기</button></div>
+  <iframe id="policyDocumentFrame" title="홈페이지 정책 문서" src="about:blank"></iframe>
+</dialog>
+<footer class="site-footer"><div class="wrap footer-bottom">© 2026 코비테크 · <a href="mailto:today60100@gmail.com">기관 이용 문의</a> · <a href="/">홈으로 돌아가기</a></div></footer>
+<dialog id="sessionDialog" class="institution-session-dialog" aria-labelledby="sessionTitle">
+  <h2 id="sessionTitle">기관 로그인 시간이 곧 만료됩니다.</h2>
+  <p>로그인 후 30분이 지나면 자동으로 로그아웃됩니다. 계속 이용하시려면 로그인 시간을 연장해 주세요.</p>
+  <p>자동 로그아웃까지 <strong id="sessionWarningTime">05:00</strong></p>
+  <p id="sessionError" class="account-message error" role="alert"></p>
+  <div class="account-actions"><button id="sessionExtend" class="primary" type="button">로그인 연장</button><button id="sessionLogout" type="button">지금 로그아웃</button></div>
+</dialog>
+<script src="/__/firebase/8.10.1/firebase-app.js"></script>
+<script src="/__/firebase/8.10.1/firebase-auth.js"></script>
+<script src="/__/firebase/8.10.1/firebase-functions.js"></script>
+<script src="/__/firebase/init.js"></script>
+<script src="./institution-phone.js?v=1"></script>
+<script src="./session-timeout.js?v=2"></script>
+<script src="./senior-summary.js?v=2"></script>
+<script src="./institution.js?v=17"></script>
+</body></html>

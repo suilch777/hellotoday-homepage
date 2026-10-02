@@ -6,17 +6,18 @@
   <meta name="theme-color" content="#173750">
   <meta name="description" content="오늘어때?는 아침과 저녁의 안부를 확인하고 보호자에게 소식을 전하는 시니어 안부 확인 서비스입니다.">
   <title>오늘어때? | 매일의 안부를 잇다</title>
-  <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/assets/site.css?v=8">
   <script defer src="/assets/site.js"></script>
+  <link rel="icon" type="image/png" href="/assets/hellotoday-logo.png">
 </head>
 <body>
   <a class="skip" href="#main">본문으로 바로가기</a>
   <header class="site-header">
     <div class="wrap header-inner">
-      <a class="brand" href="/" aria-label="오늘어때? 홈"><span class="brand-mark" aria-hidden="true">오늘</span><span>오늘어때<span class="brand-question">?</span></span></a>
+      <a class="brand" href="/" aria-label="오늘어때? 홈"><img class="brand-logo" src="/assets/hellotoday-logo.png" width="48" height="48" alt="" aria-hidden="true"><span>오늘어때<span class="brand-question">?</span></span></a>
       <button class="menu-toggle" type="button" aria-controls="primary-nav" aria-expanded="false">메뉴 <span aria-hidden="true">☰</span></button>
       <nav class="nav" id="primary-nav" aria-label="주 메뉴">
-        <a href="#service">서비스 소개</a><a href="#how">이용 방법</a><a href="/institution/">기관 관리</a><a href="/operator/">운영자 관리</a>
+        <a href="#service">서비스 소개</a><a href="/install/">앱 설치·사용 안내</a><a href="/institution/">기관 관리</a><a href="/operator/">운영자 관리</a>
         <a class="nav-contact" href="mailto:today60100@gmail.com?subject=%EC%98%A4%EB%8A%98%EC%96%B4%EB%95%8C%20%EB%AC%B8%EC%9D%98">문의하기 <span aria-hidden="true">↗</span></a>
       </nav>
     </div>
@@ -30,7 +31,7 @@
           <p class="eyebrow"><span class="eyebrow-line"></span> 시니어 안부 확인 서비스</p>
           <h1 id="hero-title">오늘도 잘 지내시죠?<br><em>안부를 묻는 하루.</em></h1>
           <p class="hero-lead">아침과 저녁, 간편하게 안부를 확인하고<br class="desktop-break"> 그 소식을 가족에게 전합니다.</p>
-          <div class="hero-actions"><a class="button button-primary" href="#service">서비스 살펴보기 <span aria-hidden="true">↗</span></a><a class="text-link" href="#how">어떻게 사용하나요? <span aria-hidden="true">→</span></a></div>
+          <div class="hero-actions"><a class="button button-primary" href="/install/">앱 설치·사용 안내 <span aria-hidden="true">↗</span></a><a class="text-link" href="#service">서비스 살펴보기 <span aria-hidden="true">→</span></a></div>
         </div>
       </div>
       <div class="hero-caption">일상의 작은 확인이 안심이 됩니다.</div>
@@ -52,10 +53,71 @@
 
     <section class="section how-section" id="how" aria-labelledby="how-title"><div class="wrap how-layout"><div class="how-title"><p class="section-kicker">HOW IT WORKS</p><h2 id="how-title">서로 다른 화면,<br>하나의 안심.</h2><p>대상자와 보호자가 각자의 역할에 맞는 화면을 사용합니다.</p></div><div class="steps"><div class="step"><span>01</span><div><h3>대상자가 안부를 확인합니다</h3><p>휴대전화 화면과 음성 안내를 따라 간편하게 응답합니다.</p></div></div><div class="step"><span>02</span><div><h3>보호자가 결과를 살펴봅니다</h3><p>확인 여부와 시간, 도움이 필요한 상황을 앱에서 확인합니다.</p></div></div><div class="step"><span>03</span><div><h3>필요하면 바로 연락합니다</h3><p>보호자는 대상자에게 전화하거나 안부 확인을 다시 요청할 수 있습니다.</p></div></div></div></div></section>
 
-    <section class="section management-section" id="management" aria-labelledby="management-title"><div class="wrap"><div class="section-heading"><div><p class="section-kicker">FOR ORGANIZATIONS</p><h2 id="management-title">기관과 운영자를 위한<br>관리 메뉴</h2></div><p>기관의 돌봄 업무와 서비스 운영을 위한 화면 구조를 준비하고 있습니다. 현재 페이지에서는 메뉴 구성을 미리 살펴볼 수 있습니다.</p></div><div class="management-grid"><a class="management-card" href="/institution/"><span class="pill">기관용</span><h3>기관 관리 <span aria-hidden="true">↗</span></h3><p>대상자 현황, 안부 지연 확인, 도움 요청, 담당자 배정 메뉴를 살펴보세요.</p><span class="card-foot">메뉴 보기 <span aria-hidden="true">→</span></span></a><a class="management-card dark-card" href="/operator/"><span class="pill">서비스 운영용</span><h3>운영자 관리 <span aria-hidden="true">↗</span></h3><p>기관 계정, 접근 권한, 공지, 서비스 운영 메뉴를 살펴보세요.</p><span class="card-foot">메뉴 보기 <span aria-hidden="true">→</span></span></a></div><p class="management-disclaimer">관리 화면은 현재 구성안입니다. 실제 이용자 정보 조회와 계정 로그인은 연결되지 않았습니다.</p></div></section>
+    <section class="section management-section" id="management" aria-labelledby="management-title"><div class="wrap"><div class="section-heading"><div><p class="section-kicker">FOR ORGANIZATIONS</p><h2 id="management-title">기관과 운영자를 위한<br>관리 메뉴</h2></div></div><div class="management-grid"><a class="management-card" href="/institution/"><span class="pill">기관용</span><h3>기관 관리 <span aria-hidden="true">↗</span></h3><p>대상자 현황, 안부 지연 확인, 도움 요청, 담당자 배정 메뉴를 살펴보세요.</p><span class="card-foot">메뉴 보기 <span aria-hidden="true">→</span></span></a><a class="management-card dark-card" href="/operator/"><span class="pill">서비스 운영용</span><h3>운영자 관리 <span aria-hidden="true">↗</span></h3><p>기관 계정, 접근 권한, 공지, 서비스 운영 메뉴를 살펴보세요.</p><span class="card-foot">메뉴 보기 <span aria-hidden="true">→</span></span></a></div></div></section>
+    <section class="closing">
+      <div class="wrap">
+        <div class="closing-inner">
+          <div>
+            <p class="section-kicker">GET IN TOUCH</p>
+            <h2>함께 안부를 이어갈<br>방법을 이야기해 주세요.</h2>
+            <p>기관 시범 운영이나 서비스에 관한 문의를 받습니다.</p>
+          </div>
+          <a class="button button-light" href="mailto:today60100@gmail.com?subject=%EC%98%A4%EB%8A%98%EC%96%B4%EB%95%8C%20%EA%B8%B0%EA%B4%80%20%EC%8B%9C%EB%B2%94%EC%9A%B4%EC%98%81%20%EB%AC%B8%EC%9D%98">이메일 문의하기 <span aria-hidden="true">↗</span></a>
+        </div>
 
-    <section class="closing"><div class="wrap closing-inner"><div><p class="section-kicker">GET IN TOUCH</p><h2>함께 안부를 이어갈<br>방법을 이야기해 주세요.</h2><p>기관 시범 운영이나 서비스에 관한 문의를 받습니다.</p></div><a class="button button-light" href="mailto:today60100@gmail.com?subject=%EC%98%A4%EB%8A%98%EC%96%B4%EB%95%8C%20%EA%B8%B0%EA%B4%80%20%EC%8B%9C%EB%B2%94%EC%9A%B4%EC%98%81%20%EB%AC%B8%EC%9D%98">이메일 문의하기 <span aria-hidden="true">↗</span></a></div></section>
+        <nav class="closing-service-nav" aria-label="서비스 메뉴">
+          <span class="closing-nav-group">
+            <a href="/install/">앱 설치·사용 안내</a>
+            <a href="#service">서비스 소개</a>
+          </span>
+          <span class="closing-nav-group closing-nav-management">
+            <a href="/institution/">기관 관리</a>
+            <a href="/operator/">운영자 관리</a>
+          </span>
+        </nav>
+      </div>
+    </section>
   </main>
-  <footer class="site-footer"><div class="wrap footer-inner"><div><a class="brand footer-brand" href="/"><span class="brand-mark" aria-hidden="true">오늘</span><span>오늘어때<span class="brand-question">?</span></span></a><p>매일의 안부를 잇는 서비스 · 코비테크</p><a href="mailto:today60100@gmail.com">today60100@gmail.com</a></div><div class="footer-links"><a href="#service">서비스 소개</a><a href="/institution/">기관 관리</a><a href="/operator/">운영자 관리</a></div></div><div class="wrap footer-bottom">© 2026 코비테크. All rights reserved.</div></footer>
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <div class="footer-company">
+        <a class="brand footer-brand" href="/">
+          <img class="brand-logo" src="/assets/hellotoday-logo.png" width="48" height="48" alt="" aria-hidden="true">
+          <span>오늘어때<span class="brand-question">?</span></span>
+        </a>
+        <p class="footer-tagline">매일의 안부를 잇는 서비스 · 코비테크</p>
+
+        <dl class="business-info">
+          <div>
+            <dt>사업자등록번호</dt>
+            <dd>675-28-02150</dd>
+          </div>
+          <div>
+            <dt>주소</dt>
+            <dd>대구광역시 달서구 감삼남길 9, 3층 3073호</dd>
+          </div>
+          <div>
+            <dt>전화</dt>
+            <dd><a href="tel:07076805700">070-7680-5700</a></dd>
+          </div>
+        </dl>
+      </div>
+      <div class="footer-policy-area">
+        <nav class="footer-link-group footer-policy-links" aria-label="정책 및 안내">
+          <strong>정책 및 안내</strong>
+          <a href="/policies/terms.html">홈페이지 이용약관</a>
+          <a class="privacy-link" href="/policies/privacy.html">홈페이지 개인정보처리방침</a>
+          <a href="/install/#app-policies">앱 정책 안내</a>
+          <a href="https://suilch777.github.io/hellotoday-policies/account-delete.html" target="_blank" rel="noopener noreferrer">계정 삭제 안내</a>
+          <a href="https://suilch777.github.io/hellotoday-policies/licenses_today.html" target="_blank" rel="noopener noreferrer">오픈소스 라이선스</a>
+        </nav>
+      </div>
+    </div>
+
+    <div class="wrap footer-bottom">
+      <details class="rights-notice"><summary><span>서비스 권리 보호 안내</span><span class="rights-toggle" aria-hidden="true">＋</span></summary><div class="rights-body"><p>‘오늘어때?’ 서비스명 상표와 안부 확인 관련 핵심 기술 특허를 출원했으며, 현재 심사 절차가 진행 중입니다.</p><div class="rights-numbers"><span>상표 출원 <strong>40-2026-0152138</strong></span><span>특허 출원 <strong>10-2026-0148420</strong></span></div></div></details>
+      <span class="footer-copyright">© 2026 코비테크. All rights reserved.</span>
+    </div>
+  </footer>
 </body>
 </html>

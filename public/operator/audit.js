@@ -10,7 +10,13 @@
     "NOTICE_HIDDEN",
     "NOTICE_SHOWN",
     "USER_SUSPENDED",
-    "USER_RESTORED"
+    "USER_RESTORED",
+    "INSTITUTION_APPROVED",
+    "INSTITUTION_REJECTED",
+    "INSTITUTION_SUSPENDED",
+    "INSTITUTION_RESTORED",
+    "INSTITUTION_PHONE_CHANGE_ALLOWED",
+    "INSTITUTION_PHONE_VERIFIED"
   ]);
 
   const checkingSection = document.getElementById("checkingSection");
@@ -78,7 +84,13 @@
       NOTICE_HIDDEN: {kind: "공지", label: "공지 숨김"},
       NOTICE_SHOWN: {kind: "공지", label: "공지 재공개"},
       USER_SUSPENDED: {kind: "이용자", label: "이용자 정지"},
-      USER_RESTORED: {kind: "이용자", label: "이용자 정지 해제"}
+      USER_RESTORED: {kind: "이용자", label: "이용자 정지 해제"},
+      INSTITUTION_APPROVED: {kind: "기관", label: "기관 가입 승인"},
+      INSTITUTION_REJECTED: {kind: "기관", label: "기관 가입 반려"},
+      INSTITUTION_SUSPENDED: {kind: "기관", label: "기관 이용 정지"},
+      INSTITUTION_RESTORED: {kind: "기관", label: "기관 정지 해제"},
+      INSTITUTION_PHONE_CHANGE_ALLOWED: {kind: "기관", label: "담당자 번호 변경 허용"},
+      INSTITUTION_PHONE_VERIFIED: {kind: "기관", label: "담당자 새 번호 인증"}
     };
     return map[action] || {kind: "기타", label: action || "알 수 없음"};
   }
@@ -96,6 +108,8 @@
       const title = String(metadata.title || "").trim();
       const noticeId = String(data.targetId || "").trim();
       target = title || ("공지 " + shortId(noticeId));
+    } else if (info.kind === "기관") {
+      target = String(metadata.institutionName || "").trim() || "기관 " + shortId(data.targetId);
     } else if (info.kind === "이용자") {
       const parts = [];
       const memberNo = String(metadata.memberNo || "").trim();
