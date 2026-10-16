@@ -22,6 +22,8 @@
       }
       if (row.type === "DELAYED_CHECK_IN") { result[["COMPLETED", "HANDLED"].includes(row.status) ? "delayedDone" : "delayedOpen"]++; bucket.delayed++; }
     }
+    result.helpTotal = result.helpDone + result.helpOpen + result.helpExpired + result.helpOther;
+    result.delayedTotal = result.delayedDone + result.delayedOpen;
     result.rate = result.complete + result.incomplete ? Math.round(1000 * result.complete / (result.complete + result.incomplete)) / 10 : null;
     return result;
   }
@@ -29,11 +31,20 @@
     const rows = [["기관명", info.name], ["조회 기간", info.start + " ~ " + info.end], ["조회 완료 시각", info.asOf],
       ["집계 기준", "현재 기관 제공 동의가 유지되는 대상자의 저장 기록 기준. 조회 중 기록 변경 가능."],
       ["현재 관리 대상자 수", result.targetCount], ["안부 완료", result.complete], ["안부 미완료", result.incomplete], ["안부 완료율(%)", result.rate ?? "기록 없음"],
-      ["도움 요청 처리 완료", result.helpDone], ["도움 요청 미처리", result.helpOpen], ["도움 요청 자동 종료", result.helpExpired], ["도움 요청 기타 종료", result.helpOther],
-      ["안부 지연 조치 완료", result.delayedDone], ["안부 지연 미처리", result.delayedOpen], [], ["날짜", "안부 완료", "안부 미완료", "도움 요청 발생", "안부 지연 발생"],
+      ["도움 요청 발생 건수", result.helpTotal],
+      ["안부 지연 발생 건수", result.delayedTotal], [], ["날짜", "안부 완료", "안부 미완료", "도움 요청 발생", "안부 지연 발생"],
       ...result.days.map(d => [d.date, d.complete, d.incomplete, d.help, d.delayed])];
     // Neutralize spreadsheet formulas even inside quoted CSV cells.
     return "\uFEFF" + rows.map(row => row.map(value => '"' + String(value).replace(/^[=+@\-\t\r]/, "'$&").replace(/"/g, '""') + '"').join(",")).join("\r\n");
+  }
+  function occurrenceBuckets(days) {
+    const size = Math.max(1, Math.ceil(days.length / 7)), buckets = [];
+    for (let i = 0; i < days.length; i += size) {
+      const group = days.slice(i, i + size);
+      buckets.push({label: group[0].date.slice(5) + (group.length > 1 ? "~" + group.at(-1).date.slice(5) : ""),
+        help: group.reduce((n,d) => n + d.help, 0), delayed: group.reduce((n,d) => n + d.delayed, 0)});
+    }
+    return {size, buckets};
   }
   function create({call, getTargets, getName, isActive, errorText, openRecords}) {
     const $ = id => document.getElementById(id);
@@ -75,25 +86,36 @@
       values.forEach(([label,value,color]) => { const li = node("li"); const dot = node("span", "", "stats-dot"); dot.style.backgroundColor=color; li.append(dot,node("span", `${label} ${value}건 (${Math.round(1000*value/total)/10}%)`)); legend.append(li); });
       host.append(legend);
     }
+    function occurrenceChart(id, title, key, total, color, groups, scale) {
+      const host = $(id); host.replaceChildren(node("h3",title),node("p",total + "건","stats-occurrence-total"));
+      host.append(node("p", groups.size === 1 ? "날짜별 발생 건수" : groups.size + "일 단위 발생 건수 · 전체 날짜는 상세내역 참조", "stats-chart-caption"));
+      if (!total) { host.append(node("p","해당 기간 발생 기록 없음","stats-no-data")); return; }
+      const chart = svg("svg",{viewBox:"0 0 360 240",role:"img","aria-label":title+": "+groups.buckets.map(d=>d.label+" "+d[key]+"건").join(", ")});
+      const width=310/groups.buckets.length;
+      chart.append(svg("line",{x1:25,y1:190,x2:340,y2:190,stroke:"#dbe5e9"}));
+      groups.buckets.forEach((d,i)=>{
+        const x=25+i*width, height=d[key]/scale*145;
+        chart.append(svg("rect",{x:x+width*.2,y:190-height,width:width*.6,height,rx:4,fill:color}));
+        const count=svg("text",{x:x+width/2,y:180-height,"text-anchor":"middle","font-size":13,fill:"#173750"});count.textContent=d[key];chart.append(count);
+        const label=svg("text",{x:x+width/2,y:208,"text-anchor":"end","font-size":10,fill:"#526575",transform:"rotate(-35 "+(x+width/2)+" 208)"});label.textContent=d.label;chart.append(label);
+      });
+      host.append(chart);
+    }
     function render() {
       const r = result;
       $("statsReportName").textContent = info.name + " · 기관 운영 통계";
       $("statsReportPeriod").textContent = info.start + " ~ " + info.end + " · 조회 완료 " + info.asOf;
       const cards = $("statsCards"); cards.replaceChildren();
-      for (const [label,value,type,status] of [["현재 관리 대상자",r.targetCount+"명"],["안부 완료율",r.rate===null?"기록 없음":r.rate+"%"],["미처리 도움 요청",r.helpOpen+"건","HELP_REQUEST","OPEN"],["미처리 안부 지연",r.delayedOpen+"건","DELAYED_CHECK_IN","OPEN"]]) {
+      for (const [label,value,type,status] of [["현재 관리 대상자",r.targetCount+"명"],["안부 완료율",r.rate===null?"기록 없음":r.rate+"%"],["도움 요청 발생",r.helpTotal+"건","HELP_REQUEST","ALL"],["안부 지연 발생",r.delayedTotal+"건","DELAYED_CHECK_IN","ALL"]]) {
         const card = node(type?"button":"div",undefined,"stats-card"); if(type){card.type="button";card.onclick=()=>openRecords({startDate:info.start,endDate:info.end,recordType:type,status});}
         card.append(node("span",label),node("strong",value)); cards.append(card);
       }
       pie("statsCheckChart","안부 완료·미완료 비율",[["완료",r.complete,"#3b958b"],["미완료",r.incomplete,"#d5a25d"]],true);
-      pie("statsHelpChart","도움 요청 처리 현황",[["처리 완료",r.helpDone,"#3b958b"],["미처리",r.helpOpen,"#d5a25d"],["자동 종료",r.helpExpired,"#97a6bc"],["기타 종료",r.helpOther,"#a396bd"]],false);
-      $("statsDelaySummary").textContent = `안부 지연 총 ${r.delayedDone + r.delayedOpen}건 · 조치 완료 ${r.delayedDone}건 · 미처리 ${r.delayedOpen}건`;
-      const chart = $("statsBars"); chart.replaceChildren();
-      const max = Math.max(1,...r.days.flatMap(d=>[d.help,d.delayed]));
-      for (const d of r.days) {
-        const row = node("div",undefined,"stats-bar-row");row.append(node("span",d.date.slice(5)));
-        for (const [key,label] of [["help","도움 요청"],["delayed","안부 지연"]]) { const cell=node("div",undefined,"stats-bar-cell");const bar=node("span",undefined,"stats-bar "+key);bar.style.width=(d[key]/max*100)+"%";cell.append(bar,node("span",d[key]+"건"));cell.setAttribute("aria-label",d.date+" "+label+" "+d[key]+"건");row.append(cell); }
-        chart.append(row);
-      }
+      const groups = occurrenceBuckets(r.days), scale = Math.max(1,...groups.buckets.flatMap(d=>[d.help,d.delayed]));
+      occurrenceChart("statsHelpChart","도움 요청 발생 건수","help",r.helpTotal,"#6b8fbd",groups,scale);
+      occurrenceChart("statsDelayChart","안부 지연 발생 건수","delayed",r.delayedTotal,"#d5a25d",groups,scale);
+      $("statsDetailsName").textContent = info.name + " · 날짜별 상세내역";
+      $("statsDetailsPeriod").textContent = $("statsReportPeriod").textContent;
       const body=$("statsRows");body.replaceChildren();
       r.days.forEach(d=>{const tr=node("tr");[d.date,d.complete,d.incomplete,d.help,d.delayed].forEach(v=>tr.append(node("td",String(v))));body.append(tr);});
       $("statsReport").hidden=false;$("statsExport").disabled=false;$("statsPrint").disabled=false;
@@ -124,7 +146,7 @@
         if(!current())return;
         result=aggregate(entries,startDate,endDate,targets.length);
         info={name:getName(),start:startDate,end:endDate,asOf:new Date().toLocaleString("ko-KR",{timeZone:"Asia/Seoul"})};
-        render();$("statsMessage").textContent="전체 기록 집계 완료 · 미처리 항목의 숫자를 누르면 해당 기록을 볼 수 있습니다.";
+        render();$("statsMessage").textContent="전체 기록 집계 완료 · 발생 건수 숫자를 누르면 해당 기간의 전체 기록을 볼 수 있습니다.";
       }catch(e){if(current()){$("statsMessage").textContent="통계를 집계하지 못했습니다. 다시 조회해 주세요. "+errorText(e);result=null;}}
       finally{if(current())$("statsForm").querySelectorAll("input,select,button").forEach(el=>el.disabled=false);}
     }
@@ -135,6 +157,6 @@
     $("statsPrint").onclick=()=>{if(result&&isActive())window.print();};
     return {open,clear};
   }
-  const api={aggregate,csv,create};
+  const api={aggregate,csv,occurrenceBuckets,create};
   if(typeof module!=="undefined"&&module.exports)module.exports=api;else root.InstitutionStatisticsView=api;
 })(typeof window!=="undefined"?window:globalThis);
