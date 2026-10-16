@@ -4,7 +4,7 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#173750"><meta name="robots" content="noindex, nofollow">
   <title>기관 가입·로그인 | 오늘어때?</title>
-  <link rel="stylesheet" href="/assets/site.css?v=4"><link rel="stylesheet" href="./institution.css?v=12">
+  <link rel="stylesheet" href="/assets/site.css?v=4"><link rel="stylesheet" href="./institution.css?v=stats-14">
   <script defer src="/assets/site.js"></script>
   <link rel="icon" type="image/png" href="/assets/hellotoday-logo.png">
 </head>
@@ -54,7 +54,7 @@
         </form>
       </div>
       <div class="account-actions"><button id="cancelSms" type="button">취소하고 로그인으로</button></div>
-      <p class="account-note sms-help">휴대전화를 분실했거나 번호가 변경되었다면 운영자에게 새 번호와 변경 사유를 알려 주세요. 운영자가 변경을 허용한 뒤 24시간 내 새 번호로 인증하고 재승인을 받아야 합니다.</p>
+      <p class="account-note sms-help">담당자나 휴대전화 번호가 변경되었다면 운영자에게 새 담당자 이름·휴대전화 번호와 변경 사유를 알려 주세요. 기관 책임자 확인과 새 번호 문자 인증 후 운영자가 변경을 확정하면 즉시 반영됩니다. 이미 승인된 기관은 추가 승인 없이 새 번호로 로그인할 수 있으며 기존 담당자의 기관 접근은 종료됩니다.</p>
     </section>
     <section id="policyView" class="account-card" hidden aria-labelledby="policyTitle">
       <h2 id="policyTitle">기관 가입 안내를 확인해 주세요</h2>
@@ -93,10 +93,12 @@
         <button type="button" role="tab" aria-selected="true" aria-controls="institutionPanel" data-institution-menu="overview">대상자 현황</button>
         <button type="button" role="tab" aria-selected="false" aria-controls="institutionPanel" data-institution-menu="checkins">안부 지연 확인</button>
         <button type="button" role="tab" aria-selected="false" aria-controls="institutionPanel" data-institution-menu="help">도움 요청</button>
+        <button type="button" role="tab" aria-selected="false" aria-controls="institutionPanel" data-institution-menu="records">전체 기록 열람</button>
+        <button type="button" role="tab" aria-selected="false" aria-controls="institutionPanel" data-institution-menu="statistics">통계 보기</button>
         <button type="button" role="tab" aria-selected="false" aria-controls="institutionPanel" data-institution-menu="staff">돌봄담당자 관리</button>
         <button type="button" role="tab" aria-selected="false" aria-controls="institutionPanel" data-institution-menu="settings">기관 설정</button>
       </div></aside>
-      <section class="portal-content" id="institutionPanel" role="tabpanel" aria-labelledby="portalTitle" aria-live="polite"><div class="portal-title-row"><h2 id="portalTitle">대상자 현황</h2><button id="seniorRefresh" type="button" hidden>새로고침</button><button id="workerRefresh" type="button" hidden>새로고침</button></div><p id="portalEmpty" class="portal-empty"></p><p id="phoneChangeHelp" class="account-note" hidden>담당자 휴대전화 변경은 운영자에게 요청해 주세요. 운영자가 지정한 새 번호로 문자 인증 후 재승인을 받으면 변경이 완료됩니다. 변경 처리 중에는 기관 메뉴 이용이 중단됩니다.</p><section id="seniorPanel" hidden aria-label="업무 대상자 현황">
+      <section class="portal-content" id="institutionPanel" role="tabpanel" aria-labelledby="portalTitle" aria-live="polite"><div class="portal-title-row"><h2 id="portalTitle">대상자 현황</h2><button id="seniorRefresh" type="button" hidden>새로고침</button><button id="workerRefresh" type="button" hidden>새로고침</button></div><p id="portalEmpty" class="portal-empty"></p><p id="phoneChangeHelp" class="account-note" hidden>담당자 변경은 새 담당자 이름과 휴대전화 번호를 운영자에게 알려 요청해 주세요. 기관 책임자 확인과 새 번호 문자 인증 후 운영자가 변경을 확정하면 이름·번호가 즉시 반영됩니다. 기존 담당자의 기관 접근은 종료되며, 이미 승인된 기관은 새 담당자가 기관 이메일과 변경된 번호로 로그인하면 추가 승인 없이 이용할 수 있습니다.</p><section id="seniorPanel" hidden aria-label="업무 대상자 현황">
   <!-- 기관 조회 범위: 승인된 담당자의 CARE_WORKER 업무 연결만 포함하며 FAMILY 연결은 제외한다. -->
   <button id="seniorBack" type="button" hidden>담당자 관리로 돌아가기</button>
   <div id="seniorSummary" class="senior-summary" role="group" aria-label="대상자 상태별 보기">
@@ -107,6 +109,32 @@
   </div>
   <p class="account-note">완료는 앱과 같은 최근 실제 안부 기록 기준입니다. 진행 중 도움요청을 우선 표시하며, 안부 지연 알림은 ‘안부 지연 확인’에서 따로 확인합니다. 배터리는 최근 안부 시점의 값입니다.</p>
   <p id="helpLiveMessage" class="account-note" role="status"></p><h3 id="seniorListTitle">전체 대상자</h3><p id="seniorMessage" role="status"></p><div id="seniorList" class="senior-list"></div>
+</section><section id="recordPanel" hidden aria-label="기관 전체 기록 열람">
+  <p class="account-note">현재 기관 제공 동의가 유지되는 업무 대상자의 기록입니다. 미완료는 안부기록에 포함하며, 위치정보와 일상 대화는 표시하지 않습니다.</p>
+  <form id="recordForm" class="record-filters">
+    <label>대상자<select id="recordTarget"><option value="">전체 대상자</option></select></label>
+    <label>시작일<input id="recordStart" type="date" required></label>
+    <label>종료일<input id="recordEnd" type="date" required></label>
+    <label>기록 종류<select id="recordType"><option value="ALL">전체 기록</option><option value="CHECK_IN">안부기록 (완료·미완료)</option><option value="HELP_REQUEST">도움요청기록</option><option value="DELAYED_CHECK_IN">안부지연기록</option></select></label>
+    <label>처리 상태<select id="recordStatus"><option value="ALL">전체</option><option value="OPEN">미처리</option></select></label><button type="submit">기록 조회</button>
+  </form>
+  <p id="recordMessage" role="status"></p>
+  <div class="record-table-wrap"><table class="record-table"><caption class="visually-hidden">대상자별 안부·도움요청·안부지연 기록</caption><thead><tr><th scope="col">대상자</th><th scope="col">기록 종류</th><th scope="col">발생·확인 시각</th><th scope="col">상태</th><th scope="col">처리·종료 시각</th><th scope="col">처리 메모</th></tr></thead><tbody id="recordRows"></tbody></table></div>
+  <button id="recordMore" type="button" hidden>기록 더 보기</button>
+</section><section id="statisticsPanel" hidden aria-label="기관 통계">
+  <form id="statsForm" class="record-filters stats-controls">
+    <label>조회 기간<select id="statsPeriod"><option value="today">오늘</option><option value="week">최근 7일</option><option value="month" selected>이번 달</option><option value="custom">직접 지정</option></select></label>
+    <label>시작일<input id="statsStart" type="date" required></label><label>종료일<input id="statsEnd" type="date" required></label><button type="submit">통계 조회</button>
+  </form>
+  <div class="stats-actions"><button id="statsExport" type="button" disabled>파일 받기 (엑셀용 CSV)</button><button id="statsPrint" type="button" disabled>인쇄 / PDF 저장</button></div>
+  <p id="statsMessage" role="status" aria-live="polite">대상자 조회 중입니다.</p>
+  <div id="statsReport" hidden>
+    <h3 id="statsReportName"></h3><p id="statsReportPeriod"></p><div id="statsCards" class="stats-cards"></div>
+    <p class="account-note">현재 기관 제공 동의가 유지되는 대상자의 저장 기록 기준입니다. 관리 대상자 수는 조회 시점 기준이며, 안부 완료율은 완료 ÷ (완료 + 미완료)입니다. 예정 건수나 향후 확인 시간은 추정하지 않습니다. 안부 지연은 나중에 완료되어도 발생 건수에 포함합니다. 도움 요청의 자동 종료는 처리 완료와 구분합니다. 처리 상태는 조회 시점의 상태이며, 조회 중 기록 변경으로 수치가 달라질 수 있습니다.</p>
+    <div class="stats-charts"><article id="statsCheckChart" class="stats-chart"></article><article id="statsHelpChart" class="stats-chart"></article></div>
+    <article class="stats-trend"><h3>날짜별 발생 건수</h3><p class="stats-bar-key"><span>파랑: 도움 요청</span><span>주황: 안부 지연</span></p><p id="statsDelaySummary"></p><div id="statsBars"></div></article>
+    <h3>날짜별 집계표</h3><div class="record-table-wrap"><table class="record-table"><caption class="visually-hidden">날짜별 안부 및 요청 집계</caption><thead><tr><th scope="col">날짜</th><th scope="col">안부 완료</th><th scope="col">안부 미완료</th><th scope="col">도움 요청 발생</th><th scope="col">안부 지연 발생</th></tr></thead><tbody id="statsRows"></tbody></table></div>
+  </div>
 </section><section id="careWorkerPanel" hidden aria-label="돌봄담당자 관리">
         <p>돌봄담당자가 앱에서 기관코드를 입력해 요청하면 이곳에서 소속을 승인하거나 반려할 수 있습니다.</p>
         <div class="worker-toolbar"><div id="workerStatusTabs" class="status-tabs" role="tablist" aria-label="돌봄담당자 소속 상태"><button type="button" role="tab" data-status="PENDING" aria-selected="true">승인 대기 <strong>0</strong></button><button type="button" role="tab" data-status="APPROVED" aria-selected="false">승인 완료 <strong>0</strong></button><button type="button" role="tab" data-status="REJECTED" aria-selected="false">반려 <strong>0</strong></button><button type="button" role="tab" data-status="SUSPENDED" aria-selected="false">소속 정지 <strong>0</strong></button></div><input id="workerStatus" type="hidden" value="PENDING"></div>
@@ -134,5 +162,7 @@
 <script src="./institution-phone.js?v=1"></script>
 <script src="./session-timeout.js?v=2"></script>
 <script src="./senior-summary.js?v=2"></script>
-<script src="./institution.js?v=17"></script>
+<script src="./records-view.js?v=2"></script>
+<script src="./statistics-view.js?v=2"></script>
+<script src="./institution.js?v=21"></script>
 </body></html>

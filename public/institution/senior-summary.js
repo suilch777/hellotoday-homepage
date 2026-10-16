@@ -7,9 +7,10 @@
       const newest = !previous || row.lastCheckInAtMs >= previous.lastCheckInAtMs ? row : previous;
       const pending = [...new Map([...(previous?.pending || []), ...row.pending].map(p => [p.id, p])).values()];
       const workers = [...new Set([...(previous?.workers || []), ...(row.workers || [])])];
+      const workerUids = [...new Set([...(previous?.workerUids || []), ...(row.workerUids || [])])];
       const relations = [...new Set([...(previous?.relations || []), ...(row.relation ? [row.relation] : [])])];
       const helpCount = Math.max(previous?.helpCount || 0, row.helpCount || 0);
-      unique.set(row.uid, {...newest, pending, workers, relations, helpCount,
+      unique.set(row.uid, {...newest, pending, workers, workerUids, relations, helpCount,
         helpRequestedAtMs: Math.max(previous?.helpRequestedAtMs || 0, row.helpRequestedAtMs || 0),
         status: helpCount ? "HELP_REQUEST" : newest.status === "COMPLETED" ? "COMPLETED" : "INCOMPLETE"});
     }

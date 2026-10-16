@@ -9,9 +9,10 @@
     $("policyVersion").textContent = `이용약관 ${currentPolicy.termsVersion} · 개인정보처리방침 ${currentPolicy.privacyVersion}`;
     show("policyView");
   }
-  const menuNames = {overview: "대상자 현황", checkins: "안부 지연 확인", help: "도움 요청", staff: "돌봄담당자 관리", settings: "기관 설정"};
+  const menuNames = {overview: "대상자 현황", checkins: "안부 지연 확인", help: "도움 요청", records: "전체 기록 열람", statistics: "통계 보기", staff: "돌봄담당자 관리", settings: "기관 설정"};
   let emailAuth, phoneAuth, api, phone, session, account, busy = false, checking = false, ending = false, epoch = 0, activeMenu = "overview";
   function show(id) {
+    document.body.classList.toggle("institution-logged-in", id === "portalView");
     views.forEach(name => { $(name).hidden = name !== id; });
     const messageBox = $("accountMessage");
     if ($(id).classList.contains("account-card")) $(id).prepend(messageBox);
@@ -80,13 +81,13 @@
   }
   async function signOutBoth() { await Promise.allSettled([emailAuth.signOut(), phoneAuth.signOut()]); }
   async function cancelAuthentication() {
-    stopHelpWatches(); epoch++; account = null; phone.reset(); session.clear(); await signOutBoth();
+    stopHelpWatches(); recordsView.clear(); statisticsView.clear(); epoch++; account = null; phone.reset(); session.clear(); await signOutBoth();
     pendingPolicyConsent = null; currentPolicy = {...displayedPolicy}; show("loginView");
     $("authForm").reset(); $("applicationForm").reset(); $("institutionDetails").replaceChildren();
   }
   async function logout(destination = "/") {
     if (ending) return;
-    ending = true; stopHelpWatches();
+    ending = true; stopHelpWatches(); recordsView.clear(); statisticsView.clear();
     const record = session.read(); show("checkingView");
     // Hide protected information immediately. Bound network cleanup must not keep
     // the UI open when the connection is unavailable.
@@ -103,7 +104,10 @@
     $("applicationEmail").textContent = emailAuth.currentUser.email; show("applicationView");
   }
   function renderMenu(name) {
-    stopHelpWatches();
+    pendingRecordFilters = null;
+    stopHelpWatches(); recordsView.clear(); statisticsView.clear();
+    $("recordPanel").hidden = name !== "records";
+    $("statisticsPanel").hidden = name !== "statistics";
     const seniorMenu = ["overview", "checkins", "help", "workerView"].includes(name);
     $("seniorRefresh").hidden = !seniorMenu;
     $("workerRefresh").hidden = name !== "staff";
@@ -113,6 +117,8 @@
     $("phoneChangeHelp").hidden = name !== "settings";
     activeMenu = name; $("portalTitle").textContent = name === "workerView" ? selectedWorker.name + " · 대상자 현황" : menuNames[name];
     if (seniorMenu) loadDashboard();
+    if (name === "records") loadDashboard().then(ok => { if (ok && activeMenu === "records" && !ending) { recordsView.open(pendingRecordFilters?.epoch === epoch ? pendingRecordFilters : undefined); pendingRecordFilters = null; } });
+    if (name === "statistics") { $("statsMessage").textContent = "기관의 업무 대상자를 확인하고 있습니다."; loadDashboard().then(ok => { if (activeMenu === "statistics" && !ending) { if(ok) statisticsView.open(); else $("statsMessage").textContent = "대상자를 확인하지 못했습니다. 통계 보기 메뉴를 다시 눌러 주세요."; } }); }
     document.querySelectorAll("[data-institution-menu]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.institutionMenu === (name === "workerView" ? "staff" : name))));
     $("institutionDetails").hidden = name !== "settings"; $("portalEmpty").hidden = true;
     const dl = $("institutionDetails"); dl.replaceChildren();
@@ -121,6 +127,17 @@
     }
   }
   let seniorSequence = 0, seniorRows = [], seniorAsOf = 0, selectedWorker = null, seniorFilter = "ALL";
+
+  const recordsView = window.InstitutionRecordsView.create({call, getTargets: () => seniorRows,
+    isActive: () => activeMenu === "records" && !ending, errorText});
+
+  const statisticsView = window.InstitutionStatisticsView.create({call, getTargets: () => seniorRows,
+    getName: () => account?.institutionName || "기관", isActive: () => activeMenu === "statistics" && !ending, errorText,
+    openRecords: filters => { renderMenu("records"); const ownEpoch = epoch;
+      // renderMenu starts a fresh authorized target scan; apply filters only when that scan finishes.
+      pendingRecordFilters = {...filters, epoch: ownEpoch};
+    }});
+  let pendingRecordFilters = null;
 
   let helpGeneration = 0, helpScopes = [], helpRetryTimers = new Set();
   function stopHelpWatches() {
@@ -141,7 +158,7 @@
         if (generation !== helpGeneration || ending) return;
         const changed = result.helpVersion !== scope.version;
         scope.version = result.helpVersion;
-        scope.rows = result.seniors.map(row => ({...row, workers: [scope.name]}));
+        scope.rows = result.seniors.map(row => ({...row, workers: [scope.name], workerUids: [scope.query.workerUid]}));
         if (changed) {
           seniorRows = window.InstitutionSeniorSummary.merge(helpScopes.flatMap(s => s.rows));
           seniorAsOf = Date.now(); renderSeniors();
@@ -163,6 +180,7 @@
   }
   function clearSeniorRows() {
     seniorRows = []; $("seniorList").replaceChildren();
+    recordsView.clear(); statisticsView.clear();
     document.querySelectorAll("#seniorSummary button").forEach(b => { b.disabled = true; b.querySelector("strong").textContent = "—"; });
   }
   async function loadDashboard() {
@@ -177,30 +195,36 @@
       let workers = [], after = null;
       if (menu === "workerView") workers = [{uid: selectedWorker.uid, displayName: selectedWorker.name}];
       else do {
-        const result = await call("institutionListCareWorkers", {status: "APPROVED", after});
+        const result = await call("institutionListCareWorkers", {status: "APPROVED", after, includeCounts: false});
         if (!current()) return;
         // Approved affiliation, not the currently selected app mode, determines visibility.
         workers.push(...result.workers.filter(w => w.accountStatus === "ACTIVE"));
         after = result.next;
       } while (after);
       const collected = [], scopes = [];
-      for (const worker of workers) {
-        after = null;
+      async function loadWorker(worker) {
+        let workerAfter = null;
         do {
-          const query = {workerUid: worker.uid, after};
+          if (!current()) return;
+          const query = {workerUid: worker.uid, after: workerAfter};
           const result = await call("institutionListSeniors", query);
           if (!current()) return;
           const name = worker.displayName || worker.memberId || "담당자 " + worker.uid.slice(0, 8);
-          const rows = result.seniors.map(row => ({...row, workers: [name]}));
+          const rows = result.seniors.map(row => ({...row, workers: [name], workerUids: [worker.uid]}));
           collected.push(...rows); scopes.push({query, name, rows, version: result.helpVersion});
-          after = result.next;
-        } while (after);
+          workerAfter = result.next;
+        } while (workerAfter);
+      }
+      // Avoid a request per worker in series without creating an unbounded burst.
+      for (let offset = 0; offset < workers.length; offset += 3) {
+        if (!current()) return;
+        await Promise.all(workers.slice(offset, offset + 3).map(loadWorker));
       }
       if (!current()) return;
       seniorRows = window.InstitutionSeniorSummary.merge(collected); seniorAsOf = Date.now();
-      helpScopes = scopes; renderSeniors(); startHelpWatches();
+      helpScopes = scopes; renderSeniors(); startHelpWatches(); return true;
     } catch (error) {
-      if (current()) { clearSeniorRows(); $("seniorMessage").textContent = "전체 현황을 확인하지 못했습니다. 새로고침해 주세요. " + errorText(error); }
+      if (current()) { seniorSequence++; clearSeniorRows(); $("seniorMessage").textContent = "전체 현황을 확인하지 못했습니다. 새로고침해 주세요. " + errorText(error); }
     }
   }
   function renderSeniors() {
@@ -219,12 +243,23 @@
       const card = document.createElement("article"); card.className = "worker-card senior-card";
       const heading = document.createElement("h3"); heading.textContent = row.relations?.join(" / ") || row.relation || "관계호칭 미등록";
       const badge = document.createElement("span"); badge.className = "senior-status " + row.status.toLowerCase(); badge.textContent = labels[row.status];
-      card.append(heading, badge);
-      const lines = ["돌봄담당자: " + row.workers.join(", "), "최근 안부: " + date(row.lastCheckInAtMs), "확인 방법: " + (methods[row.source] || "미기록"),
-        "배터리: " + (row.batteryPercent === null ? "미기록" : row.batteryPercent + "%" + (row.charging ? " · 충전 중" : ""))];
-      for (const pending of row.pending) lines.push((pending.checkType === "morning" ? "아침" : "저녁") + " 안부 지연 · 알림: " + date(pending.createdAtMs) + (pending.requestStatus === "REQUESTED" ? " · 확인 재요청: " + date(pending.requestedAtMs) : ""));
-      if (row.helpCount) lines.push("진행 중 도움요청 " + row.helpCount + "건 · " + date(row.helpRequestedAtMs));
-      for (const text of lines) { const p = document.createElement("p"); p.textContent = text; card.append(p); }
+      const identity = document.createElement("div"); identity.className = "senior-identity"; identity.append(heading, badge);
+      const facts = document.createElement("dl"); facts.className = "senior-facts";
+      const values = [["돌봄담당자", row.workers.join(", ")], ["최근 안부", date(row.lastCheckInAtMs)],
+        ["확인 방법", methods[row.source] || "미기록"], ["배터리", row.batteryPercent === null ? "미기록" : row.batteryPercent + "%" + (row.charging ? " · 충전 중" : "")]];
+      for (const [label, value] of values) {
+        const group = document.createElement("div"), dt = document.createElement("dt"), dd = document.createElement("dd");
+        dt.textContent = label; dd.textContent = value; group.append(dt, dd); facts.append(group);
+      }
+      card.append(identity, facts);
+      if (row.pending.length || row.helpCount) {
+        const alerts = document.createElement("div"); alerts.className = "senior-alerts";
+        for (const pending of row.pending) {
+          const p = document.createElement("p"); p.textContent = (pending.checkType === "morning" ? "아침" : "저녁") + " 안부지연 · " + date(pending.createdAtMs) + (pending.requestStatus === "REQUESTED" ? " · 재요청 " + date(pending.requestedAtMs) : ""); alerts.append(p);
+        }
+        if (row.helpCount) { const p = document.createElement("p"); p.textContent = "진행 중 도움요청 " + row.helpCount + "건 · " + date(row.helpRequestedAtMs); alerts.append(p); }
+        card.append(alerts);
+      }
       list.append(card);
     }
     $("seniorMessage").textContent = (rows.length ? "현재 " + rows.length + "명을 표시합니다." : "해당 대상자가 없습니다.") + " 확인: " + date(seniorAsOf) + " · 새로고침 버튼으로 최신 상태 확인";
@@ -469,9 +504,10 @@
         $("policyDocumentFrame").src = anchor.getAttribute("href");
         $("policyDocumentDialog").showModal(); return;
       }
+      if (anchor.hasAttribute("download")) return;
       if (anchor.target === "_blank" || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
       const url = new URL(anchor.href, location.href);
-      if (url.origin === location.origin && !url.pathname.startsWith("/institution/") && session.read()) { event.preventDefault(); logout(url.href); }
+      if (["http:", "https:"].includes(url.protocol) && url.origin === location.origin && !url.pathname.startsWith("/institution/") && session.read()) { event.preventDefault(); logout(url.href); }
     });
     $("policyDocumentClose").onclick = () => {
       $("policyDocumentDialog").close(); $("policyDocumentFrame").src = "about:blank";

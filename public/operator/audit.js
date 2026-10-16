@@ -89,8 +89,8 @@
       INSTITUTION_REJECTED: {kind: "기관", label: "기관 가입 반려"},
       INSTITUTION_SUSPENDED: {kind: "기관", label: "기관 이용 정지"},
       INSTITUTION_RESTORED: {kind: "기관", label: "기관 정지 해제"},
-      INSTITUTION_PHONE_CHANGE_ALLOWED: {kind: "기관", label: "담당자 번호 변경 허용"},
-      INSTITUTION_PHONE_VERIFIED: {kind: "기관", label: "담당자 새 번호 인증"}
+      INSTITUTION_PHONE_CHANGE_ALLOWED: {kind: "기관", label: "담당자 변경 승인"},
+      INSTITUTION_PHONE_VERIFIED: {kind: "기관", label: "담당자 새 번호 인증 완료"}
     };
     return map[action] || {kind: "기타", label: action || "알 수 없음"};
   }
